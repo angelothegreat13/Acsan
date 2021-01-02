@@ -37,8 +37,10 @@ class ProductsController extends Controller
             'description' => ['required','min:10'],
             'image' => ['required','image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
         ]);
+        
+        $futureID = Product::latest()->first()->id + 1;
 
-        $imgName = time().'.'.$request->image->extension();
+        $imgName = time().$futureID.'.'.$request->image->extension();
         $request->image->move('img/product', $imgName);
         $imgURL = 'img/product/'.$imgName;
 

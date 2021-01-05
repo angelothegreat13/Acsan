@@ -61,6 +61,7 @@
                         <th>Qty</th>
                         <th>Image</th>
                         <th>Product</th>
+                        <th>Logo</th>
                         <th>Product Price</th>
                         <th>Attributes</th>
                         <th>Subtotal</th>
@@ -76,6 +77,13 @@
                         <td>{{ $orderProduct->product_qty }}</td>
                         <td><img src="{{ asset($orderProduct->prod_img) }}" alt="{{ $orderProduct->product_name }}" height="60" width="60"></td>
                         <td>{{ $orderProduct->product_name }}</td>
+                        <td>
+                            @if ($orderProduct->logo !== NULL)
+                                <img src="{{ asset($orderProduct->logo) }}" height="60" width="60">
+                            @else 
+                                None
+                            @endif
+                        </td>
                         <td>₱ {{ number_format((float)$orderProduct->product_price, 2, '.', '') }}</td>
                         <td>
                             @if (count($orderProductAttribs))

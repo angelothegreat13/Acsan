@@ -77,8 +77,6 @@ class CartController extends Controller
             ->first();
     }
 
-    // !This need a fix and refactor
-    // TODO: add upload logo
     public function store()
     {
         $sessionID = Session::getId();
@@ -134,6 +132,7 @@ class CartController extends Controller
             $cart->quantity = request()->qty;
             $cart->final_price = $productData->price * request()->qty;
             $cart->option_values_id = $optionValuesID;
+            self::uploadLogo($cart);
             $cart->save();
 
             $latestCartID = $cart->id;
@@ -200,12 +199,11 @@ class CartController extends Controller
                 if ($cartAttribExist) 
                 {
                     $baseFinalPrice = $cartData->first()->final_price / $cartData->first()->quantity;
-
-                    Cart::where('id',$cartID)
-                        ->update([
-                            'quantity' => $newQty,
-                            'final_price' => $baseFinalPrice * $newQty
-                        ]);
+                    $cart = Cart::where('id',$cartID)->first();
+                    $cart->quantity = $newQty;
+                    $cart->final_price = $baseFinalPrice * $newQty;
+                    self::uploadLogo($cart);
+                    $cart->save();
                 }
                 else  // Add new product in cart and cart attribute
                 { 
@@ -218,6 +216,7 @@ class CartController extends Controller
                     $cart->quantity = request()->qty;
                     $cart->final_price = $productData->price * request()->qty;
                     $cart->option_values_id = $optionValuesID;
+                    self::uploadLogo($cart);
                     $cart->save();
 
                     $latestCartID = $cart->id;
@@ -253,19 +252,18 @@ class CartController extends Controller
                 }
             }
             else {
-                Cart::where('id',$cartID) // update cart table data if no attributes
-                    ->update([
-                        'price' => $productData->price,
-                        'quantity' => $newQty,
-                        'final_price' => $productData->price * $newQty
-                    ]);
+                $cart =  Cart::where('id',$cartID)->first();
+                $cart->price = $productData->price;
+                $cart->quantity = $newQty;
+                $cart->final_price = $productData->price * $newQty;
+                self::uploadLogo($cart);                
+                $cart->save();
             }
         }
 
         return redirect()->back()->with('success', 'Product successfully added to your cart!');
     }
     
-    // TODO: Delete also the cart attribute
     public function destroy($cartID)
     {
         Cart::where('id',$cartID)->delete();
@@ -273,4 +271,15 @@ class CartController extends Controller
 
         return redirect()->back()->with('success', 'Cart row sucessfully deleted');
     }
+
+    protected static function uploadLogo($cart)
+    {
+        if (request()->hasFile('logo')) {
+            $imgName = uniqid().time().'.'.request()->logo->extension();
+            request()->logo->move('img/logos', $imgName);
+            $logoURL = 'img/logos/'.$imgName;
+            $cart->logo = $logoURL;
+        }
+    }
+
 }

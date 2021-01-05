@@ -42,7 +42,7 @@
                 <h1 class="title">{{ $product->name }}</h1>
                 <span class="product-price mb-3">₱ {{ number_format((float)$product->price, 2, '.', '') }}</span>
                 
-                <form action="{{ route('cart.store') }}" method="POST" id="addToCartForm">
+                <form action="{{ route('cart.store') }}" method="POST" id="addToCartForm" enctype="multipart/form-data">
                 @csrf
                 <input type="hidden" name="product_id" id="product_id" value="{{ $product->id }}">
                 <input type="hidden" name="productPrice" class="productPrice" value="{{ $product->price }}">

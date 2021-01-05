@@ -121,6 +121,7 @@ class OrdersController extends Controller
             $orderProduct->product_price = $cart->price;
             $orderProduct->product_qty = $cart->quantity;
             $orderProduct->product_final_price = $cart->final_price;
+            $orderProduct->logo = $cart->logo;
             $orderProduct->save();
 
             $orderProductID = $orderProduct->id;

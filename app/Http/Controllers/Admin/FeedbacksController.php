@@ -18,7 +18,7 @@ class FeedbacksController extends Controller
     public function show(Feedback $feedback)
     {
         return view('admin.feedbacks.show',[
-            'feedback' => $feedback->first()            
+            'feedback' => $feedback            
         ]);
     }
 }

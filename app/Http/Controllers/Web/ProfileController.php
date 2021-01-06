@@ -10,7 +10,7 @@ class ProfileController extends Controller
 {
     public function index()
     {
-        $customer = Customer::find(currentCustomer()->id)->first();
+        $customer = Customer::where('id',currentCustomer()->id)->first();
 
         return view('web/profile',compact('customer'));
     }

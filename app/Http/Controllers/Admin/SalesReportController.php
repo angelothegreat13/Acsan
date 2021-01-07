@@ -10,9 +10,10 @@ class SalesReportController extends Controller
 {
     public function index()
     {
-        $sales = Order::with('customer')->get();
-
-        return view('admin/reports/sales-report',compact('sales'));
+        return view('admin/reports/sales-report',[
+            'sales' => Order::with('customer')->get(),
+            'totalSales' => Order::sum('total')
+        ]);
     }
 
 

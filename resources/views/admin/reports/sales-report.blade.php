@@ -19,7 +19,7 @@
 <section class="content">
     <div class="card">
         <div class="card-header pt-10">
-            <h3 class="card-title font-weight-bold text-xl">Total Sales: ₱ {{ number_format((float)$totalSales, 2, '.', '') }}</h3>
+            <h3 class="card-title font-weight-bold text-lg">Total Sales: ₱ {{ number_format((float)$totalSales, 2, '.', '') }}</h3>
         </div>
         <!-- /.card-header -->
         <div class="card-body py-1">

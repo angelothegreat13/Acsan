@@ -40,6 +40,8 @@ class AuthController extends Controller
             'password' => ['required'],
         ]);
 
+        $loginData['is_verified'] = 1;
+
 		if (!auth()->guard('customer')->attempt($loginData)) {
 			return back()->withErrors([
 				'message' => 'Please check your credentials and try again.'

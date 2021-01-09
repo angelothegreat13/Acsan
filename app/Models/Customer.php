@@ -8,7 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class Customer extends Authenticatable
 {
     use HasFactory;
-
+    
     protected $guard = 'customer';
     
     protected $guarded = ['id'];

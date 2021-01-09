@@ -63,6 +63,7 @@ Route::namespace('Web')->group(function() {
 
     Route::get('/register','RegistrationController@index')->name('registration.index');
     Route::post('/register/process','RegistrationController@process')->name('registration.process');
+    Route::get('/verify-customer/{code}','RegistrationController@verifyCustomer')->name('registration.verify-customer');
 
     Route::get('/cart','CartController@index')->name('cart.index');
     Route::post('/cart/store','CartController@store')->name('cart.store');

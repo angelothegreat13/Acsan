@@ -28,6 +28,7 @@ class RegistrationController extends Controller
             'contact_number' => ['required'],
             'address' => ['required','min:2'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'g-recaptcha-response' => ['required','captcha']
         ]);
         
         $validatedData['password'] = bcrypt(request(('password')));

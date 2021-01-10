@@ -1,4 +1,7 @@
 @extends('web.app')
+@section('extra-css')
+    {!! NoCaptcha::renderJs() !!}
+@endsection
 @section('content')
 <div class="row">
     <div class="card border p-5 mt-5 col-xs-10 col-sm-8 col-md-6 col-lg-5 mx-auto" style="margin-bottom:100px;">
@@ -38,6 +41,14 @@
             <div class="form-group">
                 <label class="font-weight-bold text-lg" for="password_confirmation">Confirm Password</label>
                 <input type="password" class="form-control" name="password_confirmation" id="password_confirmation" required>
+            </div>
+            <div class="form-group">
+                {!! app('captcha')->display() !!}
+                @if ($errors->has('g-recaptcha-response'))
+                    <small class="form-text text-danger font-italic font-weight-bold">
+                        {{ $errors->first('g-recaptcha-response') }}
+                    </small>
+                @endif
             </div>
             <div class="form-group">
                 <button type="submit" class="btn btn-info">Register</button>

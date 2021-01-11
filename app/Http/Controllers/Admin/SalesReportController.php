@@ -14,7 +14,7 @@ class SalesReportController extends Controller
 
     public static function paidOrders()
     {
-        return Order::with('customer')->where('status',4)->get();
+        return Order::with('customer')->where('status',4)->latest()->get();
     }
 
     public function index()

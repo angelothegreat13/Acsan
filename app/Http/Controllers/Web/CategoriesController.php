@@ -13,6 +13,10 @@ class CategoriesController extends Controller
     {
         $categoryData = Category::where('slug',$category)->first();
 
+        if ($categoryData === NULL) {
+            return view('web.404');
+        }
+
         return view('web/shop',[
             'products' => Product::where('category_id',$categoryData->id)->get(),
             'categoryName' => $categoryData->name

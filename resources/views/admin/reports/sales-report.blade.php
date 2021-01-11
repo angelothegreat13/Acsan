@@ -17,6 +17,13 @@
     </div>
 </section>
 <section class="content">
+    <form method="POST" action="{{ route('admin.sales-report.export-excel') }}">
+        @csrf
+        <div class="text-right mb-3">
+            <button type="submit" class="btn btn-success">Export Excel</button>
+        </div>
+    </form>
+    
     <div class="card">
         <div class="card-header pt-10">
             <h3 class="card-title font-weight-bold text-lg">Total Sales: ₱ {{ number_format((float)$totalSales, 2, '.', '') }}</h3>

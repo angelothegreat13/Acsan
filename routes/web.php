@@ -48,6 +48,7 @@ Route::namespace('Admin')->group(function() {
             Route::patch('/orders/{order}/update-order-status','OrdersController@updateOrderStatus')->name('admin.orders.update-order-status');
 
             Route::get('/sales-report','SalesReportController@index')->name('admin.sales-report');
+            Route::post('/sales-report/export-excel','SalesReportController@exportExcel')->name('admin.sales-report.export-excel');
 
             Route::get('/customers','CustomersController@index')->name('admin.customers.index');
         });

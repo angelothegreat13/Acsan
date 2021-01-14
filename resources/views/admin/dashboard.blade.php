@@ -88,8 +88,8 @@
                 <div class="card">
                     <div class="card-header">
                         <h3 class="card-title">
-                        <i class="fas fa-chart-bar mr-1 text-primary"></i>
-                            Total Sales Report
+                            <i class="fas fa-chart-bar mr-1 text-primary"></i>
+                            <span class="sales-report-title">Total Sales Report</span>
                         </h3>
                     </div>
                     <div class="card-body">
@@ -109,49 +109,103 @@
 @section('extra-scripts')
 <script src="{{ asset('plugins/chart.js/Chart.min.js') }}"></script>
 <script type="text/javascript">
-var salesChartCanvas = document.getElementById('revenue-chart-canvas').getContext('2d');
 
-var salesChartData = {
-    labels  : ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July'],
-    datasets: [
+const salesFilterURL = {!! json_encode(route('admin.sales-report.filter')) !!};
+const salesChartCanvas = document.getElementById('revenue-chart-canvas').getContext('2d');
+var salesChart;
+var dynamicColors = function() 
+{
+    var r = Math.floor(Math.random() * 255);
+    var g = Math.floor(Math.random() * 255);
+    var b = Math.floor(Math.random() * 255);
+    return "rgb(" + r + "," + g + "," + b + ")";
+};
+
+function renderSalesReportChart(type)
+{   
+    $.ajax({
+        type: "POST",
+        url: salesFilterURL,
+        data: { type: type },
+        dataType: "JSON",
+        success: function (res) 
         {
-            label               : 'Digital Goods',
-            borderColor         : 'rgba(60,141,188,0.8)',
-            borderWidth         : 3,
-            // backgroundColor: 'rgba(255,255,255, 0)',
-            pointRadius         : false,
-            pointColor          : '#3b8bba',
-            pointStrokeColor    : 'rgba(60,141,188,1)',
-            pointHighlightFill  : '#fff',
-            pointHighlightStroke: 'rgba(60,141,188,1)',
-            data                : [28, 48, 40, 19, 86, 27, 90]
+            let dates = [];
+            let sales = [];
+            let colors = [];
+
+            for (const i in res) {
+                dates.push(res[i].date);
+                sales.push(res[i].sale)
+                colors.push(dynamicColors());
+            }
+
+            const salesChartData = {
+                labels  : dates,
+                datasets: [
+                    {
+                        backgroundColor: colors,
+                        pointRadius         : false,
+                        pointColor          : '#3b8bba',
+                        pointStrokeColor    : 'rgba(60,141,188,1)',
+                        pointHighlightFill  : '#fff',
+                        pointHighlightStroke: 'rgba(60,141,188,1)',
+                        data                : sales
+                    }
+                ]
+            }
+
+            const salesChartOptions = {
+                maintainAspectRatio : false,
+                responsive : true,
+                legend: {
+                    display: false
+                },
+                scales: {
+                    xAxes: [],
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:true,
+                        }
+                    }]
+                }
+            }
+
+            salesChart = new Chart(salesChartCanvas, { 
+                type: 'bar', 
+                data: salesChartData, 
+                options: salesChartOptions
+            });
         }
-    ]
+    });
 }
 
-var salesChartOptions = {
-    maintainAspectRatio : false,
-    responsive : true,
-    legend: {
-        display: false
-    },
-    scales: {
-        xAxes: [],
-        yAxes: []
-    },
-    elements: {
-        line: {
-            tension: 0 
-        }
-    }
-}
-
-  // This will get the first returned node in the jQuery collection.
-var salesChart = new Chart(salesChartCanvas, { 
-    type: 'line', 
-    data: salesChartData, 
-    options: salesChartOptions
+$(document).ready(function () {
+    renderSalesReportChart("monthly");
 });
-  
+
+$("#daily").click(function () { 
+    $(".sales-report-title").text("Daily Sales Report");
+    salesChart.destroy();
+    renderSalesReportChart("daily");
+});
+
+$("#weekly").click(function () { 
+    $(".sales-report-title").text("Weekly Sales Report");
+    salesChart.destroy();
+    renderSalesReportChart("weekly");
+});
+
+$("#monthly").click(function () { 
+    $(".sales-report-title").text("Monthly Sales Report");
+    salesChart.destroy();
+    renderSalesReportChart("monthly");
+});
+
+$("#yearly").click(function () { 
+    $(".sales-report-title").text("Yearly Sales Report");
+    salesChart.destroy();
+    renderSalesReportChart("yearly");
+});
 </script>
 @endsection

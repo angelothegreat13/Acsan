@@ -49,6 +49,7 @@ Route::namespace('Admin')->group(function() {
 
             Route::get('/sales-report','SalesReportController@index')->name('admin.sales-report');
             Route::post('/sales-report/export-excel','SalesReportController@exportExcel')->name('admin.sales-report.export-excel');
+            Route::post('/sales-report/filter','TotalSalesReportController@filter')->name('admin.sales-report.filter');
 
             Route::get('/customers','CustomersController@index')->name('admin.customers.index');
         });

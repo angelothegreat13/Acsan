@@ -17,7 +17,7 @@ class TotalSalesReportController extends Controller
         {
             case 'daily':
                 $orders = Order::select(DB::raw('DATE(created_at) AS date,SUM(total) AS sale'))
-                    ->where('status',4)
+                    ->where('status', '<>', 2)
                     ->whereRaw('DATE(created_at) = CURDATE()')
                     ->groupBy('date')
                     ->get();
@@ -25,6 +25,7 @@ class TotalSalesReportController extends Controller
 
             case 'weekly':
                 $orders = Order::select(DB::raw('DAYNAME(created_at) AS date,SUM(total) AS sale'))
+                    ->where('status', '<>', 2)
                     ->whereRaw('WEEKOFYEAR(created_at) = WEEKOFYEAR(NOW())')
                     ->groupBy(DB::raw('DAY(created_at),DAYNAME(created_at)'))
                     ->orderByRaw('DAY(created_at)')
@@ -33,7 +34,7 @@ class TotalSalesReportController extends Controller
 
             case 'monthly':
                 $orders = Order::select(DB::raw('MONTHNAME(created_at) AS date,SUM(total) AS sale'))
-                    ->where('status',4)
+                    ->where('status', '<>', 2)
                     ->whereRaw('YEAR(created_at) = YEAR(NOW())')
                     ->groupBy(DB::raw('MONTH(created_at),date'))
                     ->get();                    
@@ -41,6 +42,7 @@ class TotalSalesReportController extends Controller
 
             case 'yearly':
                 $orders = Order::select(DB::raw('YEAR(created_at) AS date,SUM(total) AS sale'))
+                    ->where('status', '<>', 2)
                     ->groupBy('date')
                     ->orderBy('date')
                     ->get();

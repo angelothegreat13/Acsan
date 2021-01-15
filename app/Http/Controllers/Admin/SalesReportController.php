@@ -11,17 +11,16 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class SalesReportController extends Controller
 {    
-
     public static function paidOrders()
     {
-        return Order::with('customer')->where('status',4)->latest()->get();
+        return Order::with('customer')->where('status', '<>', 2)->latest()->get();
     }
 
     public function index()
     {   
         return view('admin/reports/sales-report',[
             'sales' => self::paidOrders(),
-            'totalSales' => Order::where('status',4)->sum('total')
+            'totalSales' => Order::where('status', '<>', 2)->sum('total')
         ]);
     }
 

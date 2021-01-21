@@ -45,6 +45,7 @@ Route::namespace('Admin')->group(function() {
 
             Route::get('/orders','OrdersController@index')->name('admin.orders.index');
             Route::get('/orders/{order}/manage','OrdersController@manage')->name('admin.orders.manage');
+            Route::patch('/orders/{order}/upload-delivery-receipt','OrdersController@uploadDeliveryReceipt')->name('admin.orders.upload-delivery-receipt');
             Route::patch('/orders/{order}/update-order-status','OrdersController@updateOrderStatus')->name('admin.orders.update-order-status');
 
             Route::get('/sales-report','SalesReportController@index')->name('admin.sales-report');

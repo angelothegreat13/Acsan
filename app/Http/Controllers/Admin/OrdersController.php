@@ -64,4 +64,23 @@ class OrdersController extends Controller
         return redirect()->back()->with('success', 'Order status has been successfully updated');
     }
 
+    public function uploadDeliveryReceipt(Request $request,Order $order)
+    {
+        $validated = $request->validate([
+            'delivery_receipt' => ['required']
+        ]);
+
+        if ($request->hasFile('delivery_receipt')) {
+            $imgName = time().'.'.$request->delivery_receipt->extension();
+            $request->delivery_receipt->move('img/delivery-receipts', $imgName);
+            $imgURL = 'img/delivery-receipts/'.$imgName;
+
+            $order->delivery_receipt = $imgURL; 
+        }
+
+        $order->save();
+
+        return redirect()->back()->with('success', 'Delivery Receipt has been successfully uploaded');
+    }
+
 }

@@ -116,6 +116,21 @@
                     View Bank Statement
                 </button>
                 <hr>
+                <form method="POST" action="{{ route('admin.orders.upload-delivery-receipt',$order->id) }}" enctype="multipart/form-data">
+                    @csrf
+                    @method('PATCH') 
+                    <div class="form-group">
+                        <input type="file" name="delivery_receipt" id="delivery_receipt" >
+                        @error('delivery_receipt')<small class="form-text text-danger font-italic font-weight-bold">{{ $message }}</small>@enderror
+                        @if ($message = Session::get('success'))
+                            <p class="alertMsg form-text text-success font-italic mt-3">{{ $message }}</p>
+                        @endif
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-info btn-sm">Attach Delivery Receipt</button>
+                    </div>
+                </form>
+                <hr>
 
                 <form action="{{ route('admin.orders.update-order-status',$order->id) }}" method="POST" role="form">
                     @csrf

@@ -127,7 +127,8 @@
                     @method('PATCH') 
                     <p><b style="color:#212121;">Payment Method:</b> Bank Deposit</p>
                     <div class="form-group">
-                        <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#bankModal">View Bank Statement</button>
+                        <button type="button" class="btn btn-success btn-sm mr-2" data-toggle="modal" data-target="#bankModal">View Bank Statement</button>
+                        <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#deliveryReceiptModal">View Delivery Receipt</button>
                     </div>
                     
                     <div class="form-group">
@@ -191,6 +192,29 @@
                     $bankImg = ($order->bank_statement === NULL) ? 'img/placeholder.png' : $order->bank_statement ;
                 @endphp
                 <img src="{{ asset($bankImg) }}" class="img-fluid">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delivery Receipt Modal -->
+<div class="modal fade" id="deliveryReceiptModal" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Delivery Receipt</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @php
+                    $deliveryReceipt = ($order->delivery_receipt === NULL) ? 'img/placeholder.png' : $order->delivery_receipt ;
+                @endphp
+                <img src="{{ asset($deliveryReceipt) }}" class="img-fluid">
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

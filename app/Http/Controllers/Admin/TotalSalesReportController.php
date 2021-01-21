@@ -18,7 +18,7 @@ class TotalSalesReportController extends Controller
             case 'daily':
                 $orders = Order::select(DB::raw('DATE(created_at) AS date,SUM(CASE WHEN status = 6 THEN (total * 0.70) ELSE total END) AS sale'))
                     ->where('status', '<>', 2)
-                    ->whereRaw('DATE(created_at) = CURDATE()')
+                    ->whereRaw("DATE(created_at) = DATE(CONVERT_TZ(NOW(),'+01:00','+08:00'))")
                     ->groupBy('date')
                     ->get();
             break;

@@ -29,7 +29,7 @@ class Order extends Model
 
     public function scopeDailySalesReport($query)
     {
-        $query->paid()->whereRaw('DATE(created_at) = CURDATE()')->latest();
+        $query->paid()->whereRaw("DATE(created_at) = DATE(CONVERT_TZ(NOW(),'+01:00','+08:00'))")->latest();
     }
 
     public function scopeWeeklySalesReport($query)

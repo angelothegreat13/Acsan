@@ -122,7 +122,7 @@
                     <div class="form-group">
                         <input type="file" name="delivery_receipt" id="delivery_receipt" >
                         @error('delivery_receipt')<small class="form-text text-danger font-italic font-weight-bold">{{ $message }}</small>@enderror
-                        @if ($message = Session::get('success'))
+                        @if ($message = Session::get('successDelivery'))
                             <p class="alertMsg form-text text-success font-italic mt-3">{{ $message }}</p>
                         @endif
                     </div>

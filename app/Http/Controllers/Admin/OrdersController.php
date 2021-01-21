@@ -80,7 +80,7 @@ class OrdersController extends Controller
 
         $order->save();
 
-        return redirect()->back()->with('success', 'Delivery Receipt has been successfully uploaded');
+        return redirect()->back()->with('successDelivery', 'Delivery Receipt has been successfully uploaded');
     }
 
 }

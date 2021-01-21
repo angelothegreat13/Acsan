@@ -170,7 +170,7 @@
                             <td>₱ {{ number_format((float)$order->total, 2, '.', '') }}</td>
                         </tr>
                         @php
-                            $downPayment = ($order->status === 6) ? $order->total * 0.70 : 0;
+                            $downPayment = $order->total * 0.70;
                         @endphp
                         <tr>
                             <th>Down Payment</th>

@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Order extends Model
 {
@@ -19,6 +20,31 @@ class Order extends Model
     public function orderStatus()
     {
         return $this->belongsTo(OrderStatus::class,'status');
+    }
+
+    public function scopePaid($query)
+    {
+        $query->where('status', '<>', 2);
+    }
+
+    public function scopeDailySalesReport($query)
+    {
+        $query->paid()->whereRaw('DATE(created_at) = CURDATE()')->latest();
+    }
+
+    public function scopeWeeklySalesReport($query)
+    {
+        $query->paid()->whereRaw('WEEKOFYEAR(created_at) = WEEKOFYEAR(NOW())')->latest();
+    }
+
+    public function scopeMonthlySalesReport($query)
+    {
+        $query->paid()->whereRaw('YEAR(created_at) = YEAR(NOW()) AND MONTH(created_at) = MONTH(NOW())')->latest();
+    }
+
+    public function scopeYearlySalesReport($query)
+    {
+        $query->paid()->whereRaw('YEAR(created_at) = YEAR(CURDATE())')->orderBy('id','DESC');
     }
 
 }

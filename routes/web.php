@@ -49,7 +49,8 @@ Route::namespace('Admin')->group(function() {
 
             Route::get('/sales-report','SalesReportController@index')->name('admin.sales-report');
             Route::post('/sales-report/export-excel','SalesReportController@exportExcel')->name('admin.sales-report.export-excel');
-            Route::post('/sales-report/filter','TotalSalesReportController@filter')->name('admin.sales-report.filter');
+            Route::get('/sales-report/filter','SalesReportController@filter')->name('admin.sales-report.filter');
+            Route::post('/total-sales-report/filter','TotalSalesReportController@filter')->name('admin.total-sales-report.filter');
 
             Route::get('/customers','CustomersController@index')->name('admin.customers.index');
         });
@@ -92,7 +93,6 @@ Route::namespace('Web')->group(function() {
 
         Route::get('/change-password','ChangePasswordController@index')->name('change-password');
         Route::patch('/change-password/{customer}update','ChangePasswordController@update')->name('change-password.update');
-
     });
 
     Route::get('{category}',['uses' => 'CategoriesController@index']);

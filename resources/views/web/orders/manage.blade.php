@@ -142,6 +142,7 @@
                         <button type="submit" class="btn btn-sm btn-primary">Upload Bank Statement</button>
                     </div>
                 <form>
+                <p style="color:#212121;"><b>Note:</b> A 70% downpayment is required</p>
             </div>
         </div>
     </div>

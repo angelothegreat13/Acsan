@@ -110,7 +110,7 @@
 <script src="{{ asset('plugins/chart.js/Chart.min.js') }}"></script>
 <script type="text/javascript">
 
-const salesFilterURL = {!! json_encode(route('admin.sales-report.filter')) !!};
+const salesFilterURL = {!! json_encode(route('admin.total-sales-report.filter')) !!};
 const salesChartCanvas = document.getElementById('revenue-chart-canvas').getContext('2d');
 var salesChart;
 var dynamicColors = function() 

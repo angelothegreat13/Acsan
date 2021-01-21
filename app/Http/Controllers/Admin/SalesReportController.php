@@ -24,9 +24,55 @@ class SalesReportController extends Controller
         ]);
     }
 
+    public function filter()
+    {
+        $orders = '';
+
+        switch (request()->type) 
+        {
+            case 'daily':
+                $orders = Order::with('customer')->dailySalesReport()->get();
+            break;
+
+            case 'weekly':
+                $orders = Order::with('customer')->weeklySalesReport()->get();
+            break;
+
+            case 'monthly':
+                $orders = Order::with('customer')->monthlySalesReport()->get();
+            break;
+
+            case 'yearly':
+                $orders = Order::with('customer')->yearlySalesReport()->get();
+            break;
+        }
+
+        return response()->json($orders);
+    }
+
     public function exportExcel()
     {
+        $filter = request()->filter;
         $sales = self::paidOrders();
+
+        switch ($filter) 
+        {
+            case 'daily':
+                $sales = Order::with('customer')->dailySalesReport()->get();
+            break;
+
+            case 'weekly':
+                $sales = Order::with('customer')->weeklySalesReport()->get();
+            break;
+
+            case 'monthly':
+                $sales = Order::with('customer')->monthlySalesReport()->get();
+            break;
+
+            case 'yearly':
+                $sales = Order::with('customer')->yearlySalesReport()->get();
+            break;
+        }
 
         $spreadsheet = new Spreadsheet();
 		

@@ -48,16 +48,21 @@
                     <tr class="text-center">
                         <th>Order ID</th>
                         <th>Customer</th>
+                        <th>Status</th>
                         <th>Total Sale</th>
                         <th>Ordered Date</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($sales as $sale)
+                        @php
+                            $totalSale = ($sale->status === 6) ? $sale->total * 0.70 : $sale->total;
+                        @endphp
                         <tr class="text-center">
                             <td>{{ $sale->id }}</td>
                             <td>{{ ucwords($sale->customer->firstname.' '.$sale->customer->lastname) }}</td>
-                            <td>₱ {{ number_format((float)$sale->total, 2, '.', '') }}</td>
+                            <td><span class="badge badge-pill badge-secondary py-2 px-3">{{ $sale->orderStatus->name }}</span></td>
+                            <td>₱ {{ number_format((float)$totalSale, 2, '.', '') }}</td>
                             <td>{{ $sale->created_at->format('m-d-Y H:i') }}</td>
                         </tr>
                     @endforeach
@@ -90,15 +95,17 @@ $(function () {
         for (const i in data) 
         {
             let customerName = data[i].customer.firstname + " " + data[i].customer.lastname;
+            let sale = (data[i].status === 6 ? data[i].total * 0.70 : data[i].total);
 
             $('#salesTable').dataTable().fnAddData([
                 data[i].id,
                 customerName.toLowerCase().replace(/(?<= )[^\s]|^./g, a=>a.toUpperCase()),
-                "₱ "+data[i].total.toFixed(2),
+                "<span class='badge badge-pill badge-secondary py-2 px-3'>" + data[i].order_status.name +"</span>",
+                "₱ "+sale.toFixed(2),
                 prettyDate(data[i].created_at)
             ]);
             
-            totalSales += parseFloat(data[i].total);
+            totalSales += parseFloat(sale);
         }
 
         $(".total-sale").text(totalSales.toFixed(2));

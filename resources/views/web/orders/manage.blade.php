@@ -166,9 +166,15 @@
                             <td>₱ 0.00</td>
                         </tr>
                         <tr>
-                            <th>Grand Total</th>
+                            <th>Total</th>
                             <td>₱ {{ number_format((float)$order->total, 2, '.', '') }}</td>
                         </tr>
+                        @if ($order->status === 6) 
+                            <tr>
+                                <th>Down Payment</th>
+                                <td>₱ {{ number_format((float)$order->total * 0.70, 2, '.', '') }}</td>
+                            </tr>
+                        @endif
                     </tbody>
                     </table>
                 </div>

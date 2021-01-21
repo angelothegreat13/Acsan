@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use PhpOffice\PhpSpreadsheet\Writer\Csv;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -13,14 +14,20 @@ class SalesReportController extends Controller
 {    
     public static function paidOrders()
     {
-        return Order::with('customer')->where('status', '<>', 2)->latest()->get();
+        return Order::with('customer','orderStatus')
+            ->where('status', '<>', 2)
+            ->orderBy('id','DESC')
+            ->get();
     }
 
     public function index()
     {   
+        $totalSales = Order::select(DB::raw('SUM(CASE WHEN status = 6 THEN (total * 0.70) ELSE total END) AS total'))
+            ->where('status', '<>', 2)
+            ->first()->total;
         return view('admin/reports/sales-report',[
             'sales' => self::paidOrders(),
-            'totalSales' => Order::where('status', '<>', 2)->sum('total')
+            'totalSales' => $totalSales
         ]);
     }
 
@@ -31,19 +38,19 @@ class SalesReportController extends Controller
         switch (request()->type) 
         {
             case 'daily':
-                $orders = Order::with('customer')->dailySalesReport()->get();
+                $orders = Order::with('customer','orderStatus')->dailySalesReport()->get();
             break;
 
             case 'weekly':
-                $orders = Order::with('customer')->weeklySalesReport()->get();
+                $orders = Order::with('customer','orderStatus')->weeklySalesReport()->get();
             break;
 
             case 'monthly':
-                $orders = Order::with('customer')->monthlySalesReport()->get();
+                $orders = Order::with('customer','orderStatus')->monthlySalesReport()->get();
             break;
 
             case 'yearly':
-                $orders = Order::with('customer')->yearlySalesReport()->get();
+                $orders = Order::with('customer','orderStatus')->yearlySalesReport()->get();
             break;
         }
 
@@ -58,19 +65,19 @@ class SalesReportController extends Controller
         switch ($filter) 
         {
             case 'daily':
-                $sales = Order::with('customer')->dailySalesReport()->get();
+                $sales = Order::with('customer','orderStatus')->dailySalesReport()->get();
             break;
 
             case 'weekly':
-                $sales = Order::with('customer')->weeklySalesReport()->get();
+                $sales = Order::with('customer','orderStatus')->weeklySalesReport()->get();
             break;
 
             case 'monthly':
-                $sales = Order::with('customer')->monthlySalesReport()->get();
+                $sales = Order::with('customer','orderStatus')->monthlySalesReport()->get();
             break;
 
             case 'yearly':
-                $sales = Order::with('customer')->yearlySalesReport()->get();
+                $sales = Order::with('customer','orderStatus')->yearlySalesReport()->get();
             break;
         }
 
@@ -80,17 +87,21 @@ class SalesReportController extends Controller
 		$activeSheet = $spreadsheet->getActiveSheet();
 		
         $activeSheet->setCellValue('A1', 'ORDER ID');
-		$activeSheet->setCellValue('B1', 'CUSTOMER');
-		$activeSheet->setCellValue('C1', 'TOTAL SALE');
-        $activeSheet->setCellValue('D1', 'ORDERED DATE');
+        $activeSheet->setCellValue('B1', 'CUSTOMER');
+		$activeSheet->setCellValue('C1', 'STATUS');
+		$activeSheet->setCellValue('D1', 'TOTAL SALE');
+        $activeSheet->setCellValue('E1', 'ORDERED DATE');
         
         $row = 2;
         foreach ($sales as $sale) 
         {
+            $totalSale = ($sale->status === 6) ? $sale->total * 0.70 : $sale->total;
+
 			$activeSheet->setCellValue('A'.$row , $sale->id);
-			$activeSheet->setCellValue('B'.$row , ucwords($sale->customer->firstname.' '.$sale->customer->lastname));
-            $activeSheet->setCellValue('C'.$row , '₱ '.number_format((float)$sale->total, 2, '.', ''));
-            $activeSheet->setCellValue('D'.$row , $sale->created_at->format('m-d-Y H:i'));
+            $activeSheet->setCellValue('B'.$row , ucwords($sale->customer->firstname.' '.$sale->customer->lastname));
+            $activeSheet->setCellValue('C'.$row , $sale->orderStatus->name);
+            $activeSheet->setCellValue('D'.$row , '₱ '.number_format((float)$totalSale, 2, '.', ''));
+            $activeSheet->setCellValue('E'.$row , $sale->created_at->format('m-d-Y H:i'));
             $row++;
 		}
 

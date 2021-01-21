@@ -186,13 +186,19 @@
                             <td>₱ {{ number_format((float)$order->sub_total, 2, '.', '') }}</td>
                         </tr>
                         <tr>
-                            <th>Shipping:</th>
+                            <th>Shipping Fee:</th>
                             <td>₱ 0.00</td>
                         </tr>
                         <tr>
                             <th>Total:</th>
                             <td>₱ {{ number_format((float)$order->total, 2, '.', '') }}</td>
                         </tr>
+                        @if ($order->status === 6) 
+                            <tr>
+                                <th>Down Payment</th>
+                                <td>₱ {{ number_format((float)$order->total * 0.70, 2, '.', '') }}</td>
+                            </tr>
+                        @endif
                     </table>
                 </div>
             </div>

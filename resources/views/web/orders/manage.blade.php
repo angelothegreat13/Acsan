@@ -169,12 +169,13 @@
                             <th>Total</th>
                             <td>₱ {{ number_format((float)$order->total, 2, '.', '') }}</td>
                         </tr>
-                        @if ($order->status === 6) 
-                            <tr>
-                                <th>Down Payment</th>
-                                <td>₱ {{ number_format((float)$order->total * 0.70, 2, '.', '') }}</td>
-                            </tr>
-                        @endif
+                        @php
+                            $downPayment = ($order->status === 6) ? $order->total * 0.70 : 0;
+                        @endphp
+                        <tr>
+                            <th>Down Payment</th>
+                            <td>₱ {{ number_format((float)$downPayment, 2, '.', '') }}</td>
+                        </tr>
                     </tbody>
                     </table>
                 </div>
